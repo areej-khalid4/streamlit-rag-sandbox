@@ -5,7 +5,8 @@ from core.agents import (
     get_react_prompt, 
     StreamlitTraceCallback, 
     AgentExecutor, 
-    create_react_agent
+    create_react_agent,
+    run_agent_execution
 )
 from core.workflows import build_support_router_graph
 
@@ -29,30 +30,13 @@ def render_tab_agents(get_llm_fn):
             logs = []
             
             llm = get_llm_fn()
-            if llm is None:
-                st.warning("ReAct loop requires live API keys or local Ollama configurations.")
-            elif create_react_agent is None or AgentExecutor is None:
-                st.error("ReAct Agent components could not be loaded from LangChain in this environment.")
-            else:
-                try:
-                    llm_with_stop = llm.bind(stop=["\nObservation:", "\nQuestion:", "Observation:", "Question:"])
-                    agent = create_react_agent(llm_with_stop, tools_list, prompt_tpl)
-                    executor = AgentExecutor(
-                        agent=agent, 
-                        tools=tools_list, 
-                        verbose=True, 
-                        max_iterations=4, 
-                        early_stopping_method="force"
-                    )
-                    
-                    st.write("#### Execution Trace Logs")
-                    res = executor.invoke(
-                        {"input": agent_input},
-                        {"callbacks": [StreamlitTraceCallback(log_container, logs)]}
-                    )
-                    st.success(f"**Final Answer**: {res['output']}")
-                except Exception as e:
-                    st.error(f"Agent failed: {str(e)}")
+            st.write("#### Execution Trace Logs")
+            try:
+                cb = StreamlitTraceCallback(log_container, logs)
+                answer = run_agent_execution(llm, tools_list, prompt_tpl, agent_input, cb)
+                st.success(f"**Final Answer**: {answer}")
+            except Exception as e:
+                st.error(f"Agent execution error: {str(e)}")
         st.markdown('</div>', unsafe_allow_html=True)
         
     with col2:

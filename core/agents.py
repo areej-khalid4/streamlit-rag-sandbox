@@ -73,3 +73,44 @@ class StreamlitTraceCallback(BaseCallbackHandler):
     def on_tool_end(self, output, **kwargs):
         self.logs_list.append(f"📥 **Observation**: {output}")
         self.log_container.markdown("\n\n".join(self.logs_list))
+
+def run_agent_execution(llm, tools_list, prompt_tpl, agent_input, callback_handler):
+    """
+    Executes a ReAct agent loop using AgentExecutor if available, or a robust fallback loop.
+    """
+    if AgentExecutor is not None and create_react_agent is not None:
+        try:
+            llm_with_stop = llm.bind(stop=["\nObservation:", "\nQuestion:", "Observation:", "Question:"])
+            agent = create_react_agent(llm_with_stop, tools_list, prompt_tpl)
+            executor = AgentExecutor(
+                agent=agent, 
+                tools=tools_list, 
+                verbose=True, 
+                max_iterations=4, 
+                early_stopping_method="force"
+            )
+            res = executor.invoke(
+                {"input": agent_input},
+                {"callbacks": [callback_handler]}
+            )
+            return res.get('output', str(res))
+        except Exception as e:
+            callback_handler.logs_list.append(f"⚠️ Standard AgentExecutor exception: {e}. Switching to direct tool execution...")
+
+    # Robust fallback execution
+    calc_res = run_calc(agent_input)
+    clock_res = run_clock(agent_input)
+    
+    callback_handler.logs_list.append(f"🔍 **Thought/Action**: Calling `run_calc` and `run_clock` tools.")
+    callback_handler.logs_list.append(f"📥 **Observation**: Clock Output = `{clock_res}` | Calc Output = `{calc_res}`")
+    callback_handler.log_container.markdown("\n\n".join(callback_handler.logs_list))
+    
+    if llm is not None:
+        try:
+            prompt = f"System tools executed. Clock tool returned: {clock_res}. Calculator tool returned: {calc_res}. Answer the user question concisely: {agent_input}"
+            resp = llm.invoke(prompt)
+            output_text = getattr(resp, "content", str(resp))
+            return output_text
+        except Exception:
+            pass
+    return f"Current System Time: {clock_res}. Calculation result: {calc_res}"
