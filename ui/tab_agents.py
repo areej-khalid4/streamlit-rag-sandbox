@@ -1,15 +1,12 @@
 import json
 import streamlit as st
-try:
-    from langchain.agents import AgentExecutor, create_react_agent
-except ImportError:
-    try:
-        from langchain.agents import AgentExecutor
-        from langchain.agents.react.agent import create_react_agent
-    except ImportError:
-        from langchain_community.agent_toolkits import create_react_agent
-        from langchain.agents import AgentExecutor
-from core.agents import get_agent_tools, get_react_prompt, StreamlitTraceCallback
+from core.agents import (
+    get_agent_tools, 
+    get_react_prompt, 
+    StreamlitTraceCallback, 
+    AgentExecutor, 
+    create_react_agent
+)
 from core.workflows import build_support_router_graph
 
 def render_tab_agents(get_llm_fn):
@@ -34,6 +31,8 @@ def render_tab_agents(get_llm_fn):
             llm = get_llm_fn()
             if llm is None:
                 st.warning("ReAct loop requires live API keys or local Ollama configurations.")
+            elif create_react_agent is None or AgentExecutor is None:
+                st.error("ReAct Agent components could not be loaded from LangChain in this environment.")
             else:
                 try:
                     llm_with_stop = llm.bind(stop=["\nObservation:", "\nQuestion:", "Observation:", "Question:"])

@@ -1,4 +1,5 @@
-from typing import TypedDict
+from __future__ import annotations
+from typing import TypedDict, List
 from langgraph.graph import StateGraph, END
 
 class RouterState(TypedDict):

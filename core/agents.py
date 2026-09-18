@@ -1,15 +1,28 @@
 import time
 from langchain_core.tools import tool
 from langchain_core.prompts import PromptTemplate
+AgentExecutor = None
+create_react_agent = None
+
 try:
-    from langchain.agents import AgentExecutor, create_react_agent
-except ImportError:
+    from langchain.agents import AgentExecutor as _AE, create_react_agent as _CRA
+    AgentExecutor = _AE
+    create_react_agent = _CRA
+except Exception:
     try:
-        from langchain.agents import AgentExecutor
-        from langchain.agents.react.agent import create_react_agent
-    except ImportError:
-        from langchain_community.agent_toolkits import create_react_agent
-        from langchain.agents import AgentExecutor
+        from langchain.agents import AgentExecutor as _AE
+        from langchain.agents.react.agent import create_react_agent as _CRA
+        AgentExecutor = _AE
+        create_react_agent = _CRA
+    except Exception:
+        try:
+            from langchain_community.agent_toolkits import create_react_agent as _CRA
+            from langchain.agents import AgentExecutor as _AE
+            AgentExecutor = _AE
+            create_react_agent = _CRA
+        except Exception:
+            pass
+
 from langchain_core.callbacks import BaseCallbackHandler
 
 @tool

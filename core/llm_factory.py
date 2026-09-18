@@ -1,9 +1,13 @@
 import time
 import streamlit as st
-from langchain_google_genai import ChatGoogleGenerativeAI
+try:
+    from langchain_google_genai import ChatGoogleGenerativeAI
+except Exception:
+    ChatGoogleGenerativeAI = None
+
 try:
     from langchain_ollama import ChatOllama
-except ImportError:
+except Exception:
     ChatOllama = None
 
 def get_llm(provider: str, temperature: float, google_api_key: str = ""):
@@ -11,6 +15,9 @@ def get_llm(provider: str, temperature: float, google_api_key: str = ""):
     Factory function to initialize LLM instances based on selected provider.
     """
     if provider == "Gemini API":
+        if ChatGoogleGenerativeAI is None:
+            st.sidebar.error("langchain-google-genai is not available in this environment.")
+            return None
         if not google_api_key:
             st.sidebar.warning("Please provide a Gemini API Key to run real models.")
             return None
