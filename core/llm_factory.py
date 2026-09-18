@@ -10,7 +10,7 @@ try:
 except Exception:
     ChatOllama = None
 
-def get_llm(provider: str, temperature: float, google_api_key: str = "", model_name: str = "gemini-2.0-flash"):
+def get_llm(provider: str, temperature: float, google_api_key: str = "", model_name: str = "gemini-3.6-flash"):
     """
     Factory function to initialize LLM instances based on selected provider.
     """
@@ -22,8 +22,8 @@ def get_llm(provider: str, temperature: float, google_api_key: str = "", model_n
             st.sidebar.warning("Please provide a Gemini API Key to run real models.")
             return None
 
-        # Clean model string
-        target_model = model_name if model_name else "gemini-2.0-flash"
+        # Clean model string as required by Google API
+        target_model = model_name if model_name else "gemini-3.6-flash"
         return ChatGoogleGenerativeAI(
             model=target_model, 
             google_api_key=google_api_key, 

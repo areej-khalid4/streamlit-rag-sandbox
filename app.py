@@ -38,7 +38,7 @@ google_api_key_input = st.sidebar.text_input(
 # Shared LLM getter callback
 def get_current_llm():
     active_key = google_api_key_input.strip() or get_gemini_api_key()
-    return get_llm(provider=provider, temperature=temperature, google_api_key=active_key, model_name="gemini-2.0-flash")
+    return get_llm(provider=provider, temperature=temperature, google_api_key=active_key, model_name="gemini-3.6-flash")
 
 # ---------------------------------------------------------
 # Main Tabs Layout Routing
