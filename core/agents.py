@@ -25,19 +25,25 @@ except Exception:
 
 from langchain_core.callbacks import BaseCallbackHandler
 
-@tool
-def run_calc(expression: str) -> str:
-    """Calculates mathematical expression values (e.g. '5+5'). Input should be a math string."""
+def raw_calc(expression: str) -> str:
     try:
         clean_expr = "".join(c for c in expression if c in "0123456789+-*/() ")
         return str(eval(clean_expr))
     except Exception as e:
         return f"Error: {e}"
 
+def raw_clock(query: str) -> str:
+    return time.strftime("%Y-%m-%d %H:%M:%S")
+
+@tool
+def run_calc(expression: str) -> str:
+    """Calculates mathematical expression values (e.g. '5+5'). Input should be a math string."""
+    return raw_calc(expression)
+
 @tool
 def run_clock(query: str) -> str:
     """Finds the current system local clock date/time."""
-    return time.strftime("%Y-%m-%d %H:%M:%S")
+    return raw_clock(query)
 
 def get_agent_tools():
     return [run_calc, run_clock]
@@ -97,9 +103,9 @@ def run_agent_execution(llm, tools_list, prompt_tpl, agent_input, callback_handl
         except Exception as e:
             callback_handler.logs_list.append(f"⚠️ Standard AgentExecutor exception: {e}. Switching to direct tool execution...")
 
-    # Robust fallback execution
-    calc_res = run_calc(agent_input)
-    clock_res = run_clock(agent_input)
+    # Robust fallback execution using raw function references
+    calc_res = raw_calc(agent_input)
+    clock_res = raw_clock(agent_input)
     
     callback_handler.logs_list.append(f"🔍 **Thought/Action**: Calling `run_calc` and `run_clock` tools.")
     callback_handler.logs_list.append(f"📥 **Observation**: Clock Output = `{clock_res}` | Calc Output = `{calc_res}`")
