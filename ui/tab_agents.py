@@ -1,6 +1,10 @@
 import json
 import streamlit as st
-from langchain.agents import AgentExecutor, create_react_agent
+try:
+    from langchain.agents import AgentExecutor, create_react_agent
+except Exception:
+    from langchain_community.agent_toolkits import create_react_agent
+    from langchain.agents import AgentExecutor
 from core.agents import get_agent_tools, get_react_prompt, StreamlitTraceCallback
 from core.workflows import build_support_router_graph
 
