@@ -3,7 +3,7 @@ langchain==0.2.17
 langchain-core==0.2.43
 langchain-community==0.2.19
 langchain-text-splitters==0.2.4
-langchain-google-genai==1.0.10
+langchain-google-genai==1.0.7
 langchain-ollama==0.1.3
 langgraph==0.2.20
 chromadb==0.5.5
