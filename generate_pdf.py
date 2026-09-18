@@ -89,16 +89,6 @@ def create_documentation_pdf(filename="Zenith_Project_Documentation.pdf"):
         spaceAfter=4
     )
 
-    link_box_style = ParagraphStyle(
-        "DocLinkBox",
-        parent=styles["Normal"],
-        fontName="Helvetica-Bold",
-        fontSize=9.5,
-        leading=14,
-        textColor=LINK_COLOR,
-        spaceAfter=4
-    )
-
     story = []
 
     # Title & Header
@@ -140,8 +130,21 @@ def create_documentation_pdf(filename="Zenith_Project_Documentation.pdf"):
     story.append(t_deploy)
     story.append(Spacer(1, 10))
 
+    # Evaluator Testing Guide
+    story.append(Paragraph("3. Evaluator Quick-Testing Guide (Sidebar & Tabs)", h1_style))
+    story.append(Paragraph(
+        "Evaluators can easily test the application using the sidebar controls and modular tabs:", body_style
+    ))
+    story.append(Paragraph("• <b>Sidebar Provider Selector</b>: Select <code>Gemini API</code> (default, live cloud LLM), <code>Mock Provider</code> (100% offline demonstration), or <code>Local Ollama</code> (connects to local <code>http://localhost:11434</code>).", bullet_style))
+    story.append(Paragraph("• <b>Sidebar Temperature Slider</b>: Adjust completion randomness from <code>0.0</code> (deterministic) to <code>1.0</code> (creative).", bullet_style))
+    story.append(Paragraph("• <b>Tab 1 (LLM & Tokenizer)</b>: Type questions in Chat and test the Visual BPE Tokenizer splitting preview.", bullet_style))
+    story.append(Paragraph("• <b>Tab 2 (RAG Studio)</b>: Click <i>📥 Index Chunks in Vector Store</i> and execute <i>🚀 Run RAG Query</i>.", bullet_style))
+    story.append(Paragraph("• <b>Tab 3 (Agentic Workflows)</b>: Click <i>Run ReAct Agent</i> (tool reasoning) or <i>Process in LangGraph StateGraph</i> (ticket routing).", bullet_style))
+    story.append(Paragraph("• <b>Tab 4 (Grounding Evaluator)</b>: Run grounding evaluation matrix for hallucination detection.", bullet_style))
+    story.append(Spacer(1, 10))
+
     # Comprehensive Technology Stack
-    story.append(Paragraph("3. Complete Technology Stack", h1_style))
+    story.append(Paragraph("4. Complete Technology Stack", h1_style))
     
     tech_data = [
         [Paragraph("<b>Category</b>", body_style), Paragraph("<b>Technology</b>", body_style), Paragraph("<b>Purpose / Implementation Details</b>", body_style)],
@@ -168,7 +171,7 @@ def create_documentation_pdf(filename="Zenith_Project_Documentation.pdf"):
     story.append(Spacer(1, 10))
 
     # LLM Providers & Local Ollama Integration
-    story.append(Paragraph("4. Multi-Provider LLM Integration & Local Ollama", h1_style))
+    story.append(Paragraph("5. Multi-Provider LLM Integration & Local Ollama", h1_style))
     story.append(Paragraph(
         "The application features a unified LLM Factory (<code>core/llm_factory.py</code>) supporting three distinct LLM providers:", body_style
     ))
@@ -177,7 +180,7 @@ def create_documentation_pdf(filename="Zenith_Project_Documentation.pdf"):
     story.append(Paragraph("• <b>Mock Offline Provider</b>: A deterministic, simulated word-by-word streaming generator for instant offline demonstration without API keys.", bullet_style))
 
     # Agentic Workflows & Custom Tools
-    story.append(Paragraph("5. Agentic Workflows & Custom Tools", h1_style))
+    story.append(Paragraph("6. Agentic Workflows & Custom Tools", h1_style))
     story.append(Paragraph(
         "Tab 3 showcases agentic reasoning and structured graph workflows:", body_style
     ))
@@ -196,7 +199,7 @@ def create_documentation_pdf(filename="Zenith_Project_Documentation.pdf"):
     story.append(Paragraph("• <b>GENERAL Node</b>: Assigns general questions to <code>Support Rep Emily</code>.", bullet_style))
 
     # RAG Studio & Vector Database Pipeline
-    story.append(Paragraph("6. RAG Studio & Vector DB Pipeline", h1_style))
+    story.append(Paragraph("7. RAG Studio & Vector DB Pipeline", h1_style))
     story.append(Paragraph(
         "The RAG architecture in Tab 2 executes a complete 4-step retrieval pipeline:", body_style
     ))
@@ -206,7 +209,7 @@ def create_documentation_pdf(filename="Zenith_Project_Documentation.pdf"):
     story.append(Paragraph("4. <b>Context QA & Similarity Search</b>: Dense Semantic Vector Search matches relevant context chunks and injects them into system prompts.", bullet_style))
 
     # Security & Resilient Architecture
-    story.append(Paragraph("7. Security & Resilient Architecture", h1_style))
+    story.append(Paragraph("8. Security & Resilient Architecture", h1_style))
     story.append(Paragraph(
         "To ensure a seamless, production-grade experience for evaluators, the application implements robust security and fault-tolerance patterns:", body_style
     ))
