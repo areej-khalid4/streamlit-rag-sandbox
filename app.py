@@ -28,9 +28,9 @@ st.sidebar.subheader("Model Configuration")
 provider = st.sidebar.selectbox("LLM Provider", ["Mock Provider", "Local Ollama", "Gemini API"])
 temperature = st.sidebar.slider("Temperature", 0.0, 1.0, 0.3, 0.1)
 
-gemini_model = "gemini-1.5-flash"
+gemini_model = "gemini-2.0-flash"
 if provider == "Gemini API":
-    gemini_model = st.sidebar.selectbox("Gemini Model", ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro", "gemini-1.5-flash-latest"])
+    gemini_model = st.sidebar.selectbox("Gemini Model", ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-1.5-flash-latest"])
 
 google_api_key_input = st.sidebar.text_input(
     "Gemini API Key", 
