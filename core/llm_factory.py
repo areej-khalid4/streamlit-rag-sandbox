@@ -10,9 +10,9 @@ try:
 except Exception:
     ChatOllama = None
 
-def get_llm(provider: str, temperature: float, google_api_key: str = "", model_name: str = "gemini-3.6-flash"):
+def get_llm(provider: str, temperature: float, google_api_key: str = "", model_name: str = "gemini-1.5-flash"):
     """
-    Factory function to initialize LLM instances based on selected provider.
+    Factory function to initialize LLM instances based on selected provider with automatic failover fallbacks.
     """
     if provider == "Gemini API":
         if ChatGoogleGenerativeAI is None:
@@ -22,14 +22,25 @@ def get_llm(provider: str, temperature: float, google_api_key: str = "", model_n
             st.sidebar.warning("Please provide a Gemini API Key to run real models.")
             return None
 
-        # Clean model string as required by Google API
-        target_model = model_name if model_name else "gemini-3.6-flash"
-        return ChatGoogleGenerativeAI(
-            model=target_model, 
+        primary = ChatGoogleGenerativeAI(
+            model="gemini-1.5-flash", 
             google_api_key=google_api_key, 
             temperature=temperature, 
-            max_retries=1
+            max_retries=2
         )
+        fallback1 = ChatGoogleGenerativeAI(
+            model="gemini-2.0-flash", 
+            google_api_key=google_api_key, 
+            temperature=temperature, 
+            max_retries=2
+        )
+        fallback2 = ChatGoogleGenerativeAI(
+            model="gemini-1.5-pro", 
+            google_api_key=google_api_key, 
+            temperature=temperature, 
+            max_retries=2
+        )
+        return primary.with_fallbacks([fallback1, fallback2])
     elif provider == "Local Ollama":
         if ChatOllama is None:
             st.sidebar.warning("langchain-ollama is not installed in this environment.")
