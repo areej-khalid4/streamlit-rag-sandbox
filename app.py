@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-from config import BASE_DIR
+from config import BASE_DIR, get_gemini_api_key
 from core.llm_factory import get_llm
 from ui.styles import apply_custom_css, render_sidebar_branding
 from ui.tab_playground import render_tab_playground
@@ -31,7 +31,7 @@ temperature = st.sidebar.slider("Temperature", 0.0, 1.0, 0.3, 0.1)
 google_api_key = st.sidebar.text_input(
     "Gemini API Key", 
     type="password", 
-    value=os.environ.get("GEMINI_API_KEY", "")
+    value=get_gemini_api_key()
 )
 
 # Shared LLM getter callback
