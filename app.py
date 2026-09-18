@@ -28,10 +28,6 @@ st.sidebar.subheader("Model Configuration")
 provider = st.sidebar.selectbox("LLM Provider", ["Mock Provider", "Local Ollama", "Gemini API"])
 temperature = st.sidebar.slider("Temperature", 0.0, 1.0, 0.3, 0.1)
 
-gemini_model = "gemini-2.0-flash"
-if provider == "Gemini API":
-    gemini_model = st.sidebar.selectbox("Gemini Model", ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-1.5-flash-latest"])
-
 google_api_key_input = st.sidebar.text_input(
     "Gemini API Key", 
     type="password", 
@@ -42,7 +38,7 @@ google_api_key_input = st.sidebar.text_input(
 # Shared LLM getter callback
 def get_current_llm():
     active_key = google_api_key_input.strip() or get_gemini_api_key()
-    return get_llm(provider=provider, temperature=temperature, google_api_key=active_key, model_name=gemini_model)
+    return get_llm(provider=provider, temperature=temperature, google_api_key=active_key, model_name="gemini-2.0-flash")
 
 # ---------------------------------------------------------
 # Main Tabs Layout Routing
