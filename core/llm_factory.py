@@ -10,7 +10,7 @@ try:
 except Exception:
     ChatOllama = None
 
-def get_llm(provider: str, temperature: float, google_api_key: str = "", model_name: str = "gemini-2.0-flash"):
+def get_llm(provider: str, temperature: float, google_api_key: str = "", model_name: str = "gemini-3.6-flash"):
     """
     Factory function to initialize LLM instances based on selected provider with automatic failover fallbacks.
     """
@@ -23,19 +23,19 @@ def get_llm(provider: str, temperature: float, google_api_key: str = "", model_n
             return None
 
         primary = ChatGoogleGenerativeAI(
-            model="gemini-2.0-flash", 
+            model="gemini-3.6-flash", 
             google_api_key=google_api_key, 
             temperature=temperature, 
             max_retries=2
         )
         fallback1 = ChatGoogleGenerativeAI(
-            model="gemini-1.5-pro", 
+            model="gemini-1.5-flash", 
             google_api_key=google_api_key, 
             temperature=temperature, 
             max_retries=2
         )
         fallback2 = ChatGoogleGenerativeAI(
-            model="gemini-1.5-flash", 
+            model="gemini-1.5-pro", 
             google_api_key=google_api_key, 
             temperature=temperature, 
             max_retries=2
