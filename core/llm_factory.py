@@ -22,7 +22,7 @@ def get_llm(provider: str, temperature: float, google_api_key: str = ""):
             st.sidebar.warning("Please provide a Gemini API Key to run real models.")
             return None
         return ChatGoogleGenerativeAI(
-            model="gemini-3.6-flash", 
+            model="gemini-1.5-flash", 
             google_api_key=google_api_key, 
             temperature=temperature, 
             max_retries=0
