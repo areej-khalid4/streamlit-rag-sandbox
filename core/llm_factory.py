@@ -1,7 +1,10 @@
 import time
 import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_ollama import ChatOllama
+try:
+    from langchain_ollama import ChatOllama
+except ImportError:
+    ChatOllama = None
 
 def get_llm(provider: str, temperature: float, google_api_key: str = ""):
     """
@@ -18,6 +21,9 @@ def get_llm(provider: str, temperature: float, google_api_key: str = ""):
             max_retries=0
         )
     elif provider == "Local Ollama":
+        if ChatOllama is None:
+            st.sidebar.warning("langchain-ollama is not installed in this environment.")
+            return None
         return ChatOllama(
             model="llama3", 
             temperature=temperature, 

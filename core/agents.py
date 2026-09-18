@@ -3,9 +3,13 @@ from langchain_core.tools import tool
 from langchain_core.prompts import PromptTemplate
 try:
     from langchain.agents import AgentExecutor, create_react_agent
-except Exception:
-    from langchain_community.agent_toolkits import create_react_agent
-    from langchain.agents import AgentExecutor
+except ImportError:
+    try:
+        from langchain.agents import AgentExecutor
+        from langchain.agents.react.agent import create_react_agent
+    except ImportError:
+        from langchain_community.agent_toolkits import create_react_agent
+        from langchain.agents import AgentExecutor
 from langchain_core.callbacks import BaseCallbackHandler
 
 @tool
