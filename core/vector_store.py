@@ -1,5 +1,9 @@
 import os
+import warnings
 import streamlit as st
+
+warnings.filterwarnings("ignore")
+
 from langchain_community.vectorstores import Chroma
 from config import CHROMA_DB_DIR
 from core.embeddings import ZenithLocalEmbeddings
